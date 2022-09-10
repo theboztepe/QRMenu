@@ -1,7 +1,7 @@
-﻿using API.TokenConfig;
-using Core.DepencyResolvers;
+﻿using Core.DepencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
+using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

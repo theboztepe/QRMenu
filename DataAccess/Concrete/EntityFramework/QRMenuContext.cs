@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
@@ -11,5 +12,7 @@ namespace DataAccess.Concrete.EntityFramework
         }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
     }
 }

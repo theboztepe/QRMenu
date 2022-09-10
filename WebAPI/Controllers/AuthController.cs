@@ -1,7 +1,7 @@
-﻿using API.TokenConfig;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -29,12 +29,7 @@ namespace WebAPI.Controllers
             }
 
             IDataResult<AccessToken> result = _authService.CreateAccessToken(userToLogin.Data, signingConfigurations, tokenOptions);
-            if (result.Success)
-            {
-                return Ok(result.Data);
-            }
-
-            return BadRequest(result.Message);
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
         [HttpPost("register")]
@@ -48,12 +43,7 @@ namespace WebAPI.Controllers
 
             IDataResult<User> registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
             IDataResult<AccessToken> result = _authService.CreateAccessToken(registerResult.Data, signingConfigurations, tokenOptions);
-            if (result.Success)
-            {
-                return Ok(result.Data);
-            }
-
-            return BadRequest(result.Message);
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
     }
 }

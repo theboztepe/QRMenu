@@ -38,6 +38,12 @@ namespace Core.Extensions
                 message = e.Message;
             }
 
+            if (e.Message == "UnSigned")
+            {
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                message = "Yetkisiz giriş.";
+            }
+
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
