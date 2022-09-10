@@ -1,5 +1,5 @@
-﻿using API.TokenConfig;
-using Core.Entities.Concrete;
+﻿using Core.Entities.Concrete;
+using Core.Utilities.Security.Encryption;
 
 namespace Core.Utilities.Security.JWT
 {

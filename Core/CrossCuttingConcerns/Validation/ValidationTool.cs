@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 
 namespace Core.CrossCuttingConcerns.Validation
 {
@@ -6,8 +7,8 @@ namespace Core.CrossCuttingConcerns.Validation
     {
         public static void Validate(IValidator validator, object entity)
         {
-            var context = new ValidationContext<object>(entity);
-            var result = validator.Validate(context);
+            ValidationContext<object> context = new(entity);
+            ValidationResult result = validator.Validate(context);
             if (!result.IsValid)
             {
                 throw new ValidationException(result.Errors);
