@@ -42,8 +42,10 @@ namespace Business.Concrete
             User userToCheck = _userService.GetByUsername(userForLoginDto.Username);
             return userToCheck == null
                 ? new ErrorDataResult<User>(Messages.UserNotFound)
+                : !userToCheck.Status
+                ? new ErrorDataResult<User>(Messages.UserClosed)
                 : !HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt)
-                ? new ErrorDataResult<User>(Messages.PasswordError)
+                ? new ErrorDataResult<User>(Messages.UserNotFound)
                 : new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
 

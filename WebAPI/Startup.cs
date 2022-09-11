@@ -1,4 +1,5 @@
-﻿using Core.DepencyResolvers;
+﻿using AutoMapper;
+using Core.DepencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
@@ -15,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
+using WebAPI.AutoMapper;
 
 namespace WebAPI
 {
@@ -106,6 +108,13 @@ namespace WebAPI
                     }
                 });
             });
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

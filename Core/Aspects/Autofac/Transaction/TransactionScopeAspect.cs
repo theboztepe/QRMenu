@@ -4,7 +4,6 @@ using System.Transactions;
 
 namespace Core.Aspects.Autofac.Transaction
 {
-    //[TransactionScopeAspect] method üstüne yazılacak
     public class TransactionScopeAspect : MethodInterception
     {
         public override void Intercept(IInvocation invocation)
