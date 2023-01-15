@@ -8,7 +8,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.;Database=QRMenu;uid=sa;pwd=1;multipleactiveresultsets=True");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=QRMenu;uid=sa;pwd=1;multipleactiveresultsets=True;TrustServerCertificate=True");
         }
 
         public DbSet<User> Users { get; set; }
