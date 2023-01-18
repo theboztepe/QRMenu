@@ -31,18 +31,20 @@ namespace Business.Concrete
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 
+        #region CRUD
         public IDataResult<List<Category>> UserCategories(int topCategoryId)
         {
             return new SuccessDataResult<List<Category>>(_categoryDal.UserCategories(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), topCategoryId));
         }
 
-        #region CRUD
         [ValidationAspect(typeof(CategoryValidator))]
         [TransactionScopeAspect]
         public IResult Add(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
-            IResult result = BusinessRules.Run(CheckIfCategoryNameExistsAdd(category));
+            IResult result = BusinessRules.Run(
+                    CheckIfCategoryNameExistsAdd(category)
+                );
             if (result != null)
             {
                 return result;
@@ -58,7 +60,10 @@ namespace Business.Concrete
         public IResult Update(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
-            IResult result = BusinessRules.Run(CheckIfCategoryFound(category), CheckIfCategoryNameExistsUpdate(category));
+            IResult result = BusinessRules.Run(
+                    CheckIfCategoryFound(category),
+                    CheckIfCategoryNameExistsUpdate(category)
+                );
             if (result != null)
             {
                 return result;
@@ -73,7 +78,9 @@ namespace Business.Concrete
         public IResult Remove(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
-            IResult result = BusinessRules.Run(CheckIfCategoryFound(category));
+            IResult result = BusinessRules.Run(
+                    CheckIfCategoryFound(category)
+                );
             if (result != null)
             {
                 return result;
@@ -87,19 +94,19 @@ namespace Business.Concrete
         #region RULES
         private IResult CheckIfCategoryNameExistsAdd(Category category)
         {
-            bool result = _categoryDal.GetAll(p => p.Name == category.Name && p.UserId == category.UserId).Any();
+            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId).Any();
             return result ? new ErrorResult(Messages.CategoryNameAlreadyExists) : new SuccessResult();
         }
 
         private IResult CheckIfCategoryFound(Category category)
         {
-            Category result = _categoryDal.Get(p => p.Id == category.Id && p.UserId == category.UserId);
+            Category result = _categoryDal.Get(c => c.Id == category.Id && c.UserId == category.UserId);
             return result == null ? new ErrorResult(Messages.CategoryNotFound) : new SuccessResult();
         }
 
         private IResult CheckIfCategoryNameExistsUpdate(Category category)
         {
-            bool result = _categoryDal.GetAll(p => p.Name == category.Name && p.UserId == category.UserId && p.Id != category.Id).Any();
+            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId && c.Id != category.Id).Any();
             return result ? new ErrorResult(Messages.CategoryNameAlreadyExists) : new SuccessResult();
         }
         #endregion

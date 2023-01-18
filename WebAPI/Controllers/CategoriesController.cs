@@ -2,7 +2,7 @@
 using Business.Abstract;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using Entities.DTOs;
+using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

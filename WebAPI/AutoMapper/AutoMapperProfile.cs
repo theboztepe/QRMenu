@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Concrete;
-using Entities.DTOs;
+using Entities.DTOs.Category;
+using Entities.DTOs.Product;
 
 namespace WebAPI.AutoMapper
 {
@@ -11,6 +12,10 @@ namespace WebAPI.AutoMapper
             CreateMap<AddCategoryDto, Category>();
             CreateMap<UpdateCategoryDto, Category>();
             CreateMap<RemoveCategoryDto, Category>();
+
+            CreateMap<AddProductDto, Product>();
+            CreateMap<UpdateProductDto, Product>();
+            CreateMap<RemoveProductDto, Product>();
         }
     }
 }
