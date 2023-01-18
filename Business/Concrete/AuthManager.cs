@@ -5,7 +5,7 @@ using Core.Utilities.Results;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
-using Entities.Dtos;
+using Entities.DTOs.User;
 
 namespace Business.Concrete
 {

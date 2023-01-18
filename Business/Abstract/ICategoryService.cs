@@ -6,9 +6,8 @@ namespace Business.Abstract
 {
     public interface ICategoryService
     {
-        IDataResult<List<Category>> UserCategories(int topCategoryId);
-
         #region CRUD
+        IDataResult<List<Category>> UserCategories(int topCategoryId);
         IResult Add(Category category);
         IResult Update(Category category);
         IResult Remove(Category category);

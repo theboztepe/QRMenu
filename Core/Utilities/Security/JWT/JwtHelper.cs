@@ -30,6 +30,7 @@ namespace Core.Utilities.Security.JWT
 
             AccessToken accessToken = new()
             {
+                TokenType = "Bearer",
                 Token = token,
                 Expiration = _dtExpiration
             };
