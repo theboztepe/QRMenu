@@ -2,6 +2,7 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Extensions;
@@ -32,13 +33,15 @@ namespace Business.Concrete
         }
 
         #region CRUD
-        public IDataResult<List<Category>> UserCategories(int topCategoryId)
+        [CacheAspect]
+        public IDataResult<List<Category>> GetUserCategories(int topCategoryId)
         {
-            return new SuccessDataResult<List<Category>>(_categoryDal.UserCategories(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), topCategoryId));
+            return new SuccessDataResult<List<Category>>(_categoryDal.GetUserCategories(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), topCategoryId));
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
         [TransactionScopeAspect]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Add(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
@@ -57,6 +60,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(CategoryValidator))]
         [TransactionScopeAspect]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Update(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
@@ -75,6 +79,7 @@ namespace Business.Concrete
         }
 
         [TransactionScopeAspect]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Remove(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
