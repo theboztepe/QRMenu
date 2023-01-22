@@ -6,6 +6,6 @@ namespace DataAccess.Abstract
 {
     public interface IProductDal : IEntityRepository<Product>
     {
-        List<Product> CategoryProducts(int userId, int categoryId);
+        List<Product> GetCategoryProducts(int userId, int categoryId);
     }
 }

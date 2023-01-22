@@ -8,7 +8,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfProductDal : EfEntityRepositoryBase<Product, QRMenuContext>, IProductDal
     {
-        public List<Product> CategoryProducts(int userId, int categoryId)
+        public List<Product> GetCategoryProducts(int userId, int categoryId)
         {
             using QRMenuContext context = new();
             IQueryable<Product> result = from p in context.Products

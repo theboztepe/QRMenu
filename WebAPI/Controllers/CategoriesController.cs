@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll(int topCategoryId)
         {
-            IDataResult<List<Category>> result = _categoryService.UserCategories(topCategoryId);
+            IDataResult<List<Category>> result = _categoryService.GetUserCategories(topCategoryId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

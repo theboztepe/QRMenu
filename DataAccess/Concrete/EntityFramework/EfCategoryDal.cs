@@ -8,7 +8,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCategoryDal : EfEntityRepositoryBase<Category, QRMenuContext>, ICategoryDal
     {
-        public List<Category> UserCategories(int userId, int topCategoryId)
+        public List<Category> GetUserCategories(int userId, int topCategoryId)
         {
             using QRMenuContext context = new();
             IQueryable<Category> result = from c in context.Categories
