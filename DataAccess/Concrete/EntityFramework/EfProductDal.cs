@@ -13,7 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
             using QRMenuContext context = new();
             IQueryable<Product> result = from p in context.Products
                                          join c in context.Categories on p.CategoryId equals c.Id
-                                         where c.UserId == userId
+                                         where c.UserId == userId && p.CategoryId == categoryId
                                          select p;
             return result.ToList();
         }
