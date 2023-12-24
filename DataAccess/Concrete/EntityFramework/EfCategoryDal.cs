@@ -8,7 +8,7 @@ using static DataAccess.Helper.InheriteClass;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCategoryDal : EfEntityRepositoryBase<Category, QRMenuContext>, ICategoryDal
+    public class EfCategoryDal : EfEntityRepositoryBase<Category, QRMenuContext>, ICategoryDal, IQRDal
     {
         public List<Category> GetUserCategories(int userId, int topCategoryId)
         {
@@ -19,7 +19,7 @@ namespace DataAccess.Concrete.EntityFramework
             return result.ToList();
         }
 
-        public CategoryTree GetUserCategoriesTree(int userId)
+        public CategoryTree GetQRMenuCategories(int userId)
         {
             using QRMenuContext context = new();
             List<CategoriesTree> categories = (from c in context.Categories
@@ -38,7 +38,7 @@ namespace DataAccess.Concrete.EntityFramework
             return result;
         }
 
-        public CategoryTree GetUserCategoriesTreeWithProduct(int userId, IProductDal productDal)
+        public CategoryTree GetQRMenuCategoriesWithProduct(int userId, IProductDal productDal)
         {
             using QRMenuContext context = new();
             List<CategoriesTree> categories = (from c in context.Categories
@@ -58,5 +58,9 @@ namespace DataAccess.Concrete.EntityFramework
             return result;
         }
 
+        public CategoryTree GetQRMenuWithQRCode(int userId, IProductDal productDal)
+        {
+            return GetQRMenuCategoriesWithProduct(userId, productDal);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Entities.Concrete;
+﻿using Entities.Enums;
 
 namespace Entities.DTOs.Product
 {
