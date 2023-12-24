@@ -10,7 +10,6 @@ using Core.Utilities.Business;
 using Core.Utilities.IoC;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using DataAccess.Helper;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,13 +23,11 @@ namespace Business.Concrete
     public class CategoryManager : ICategoryService
     {
         private readonly ICategoryDal _categoryDal;
-        private readonly IProductDal _productDal;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CategoryManager(ICategoryDal categoryDal, IProductDal productDal)
+        public CategoryManager(ICategoryDal categoryDal)
         {
             _categoryDal = categoryDal;
-            _productDal = productDal;
 
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
@@ -119,17 +116,5 @@ namespace Business.Concrete
         }
         #endregion
         #endregion
-
-        [CacheAspect]
-        public IDataResult<CategoryTree> GetUserCategoriesTree()
-        {
-            return new SuccessDataResult<CategoryTree>(_categoryDal.GetUserCategoriesTree(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value)));
-        }
-
-        [CacheAspect]
-        public IDataResult<CategoryTree> GetUserCategoriesTreeWithProduct()
-        {
-            return new SuccessDataResult<CategoryTree>(_categoryDal.GetUserCategoriesTreeWithProduct(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), _productDal));
-        }
     }
 }

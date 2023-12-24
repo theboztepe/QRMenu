@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Concrete

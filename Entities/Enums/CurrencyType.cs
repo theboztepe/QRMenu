@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entities.Concrete
+namespace Entities.Enums
 {
     public enum CurrencyType : int
     {

@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Entities.DTOs.QR;
 
 namespace Business.Abstract
 {
@@ -8,5 +9,7 @@ namespace Business.Abstract
         User GetByMail(string email);
         User GetByUsername(string username);
         User GetById(int id);
+        User GetQRMenuCode(int v);
+        User GetQRCodeForUserId(QRCodeDto qrCode);
     }
 }

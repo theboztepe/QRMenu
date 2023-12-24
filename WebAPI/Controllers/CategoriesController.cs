@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Core.Utilities.Results;
-using DataAccess.Helper;
 using Entities.Concrete;
 using Entities.DTOs.Category;
 using Microsoft.AspNetCore.Authorization;
@@ -52,20 +51,6 @@ namespace WebAPI.Controllers
         {
             Category category = _mapper.Map<RemoveCategoryDto, Category>(removeCategory);
             IResult result = _categoryService.Remove(category);
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("categoriestree")]
-        public IActionResult CategoriesTree()
-        {
-            IDataResult<CategoryTree> result = _categoryService.GetUserCategoriesTree();
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("categoriestreewithproduct")]
-        public IActionResult CategoriesTreeWithProduct()
-        {
-            IDataResult<CategoryTree> result = _categoryService.GetUserCategoriesTreeWithProduct();
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

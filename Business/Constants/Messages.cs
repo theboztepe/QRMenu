@@ -10,6 +10,7 @@
         public static string UserAlreadyExists = "Kullanıcı zaten mevcut.";
         public static string UnSigned = "UnSigned";
         public static string UserClosed = "Hesap kapalı.";
+        public static string QRNotFound = "İlgili QR kodu için menü bulunamadı.";
         #endregion
 
         #region Category

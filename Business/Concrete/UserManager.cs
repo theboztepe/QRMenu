@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
 using DataAccess.Abstract;
+using Entities.DTOs.QR;
 
 namespace Business.Concrete
 {
@@ -31,6 +32,16 @@ namespace Business.Concrete
         public User GetById(int id)
         {
             return _userDal.Get(u => u.Id == id);
+        }
+
+        public User GetQRCodeForUserId(QRCodeDto qrCode)
+        {
+            return _userDal.Get(u => u.QRCode == qrCode.QRCode);
+        }
+
+        public User GetQRMenuCode(int userId)
+        {
+            return _userDal.Get(u => u.Id == userId);
         }
     }
 }
