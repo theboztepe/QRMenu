@@ -1,6 +1,5 @@
 ﻿using Core.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -11,5 +10,8 @@ namespace Entities.Concrete
         public string Name { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
+        public double Price { get; set; }
+        public CurrencyType Currency { get; set; }
+        public string? Image { get; set; }
     }
 }
