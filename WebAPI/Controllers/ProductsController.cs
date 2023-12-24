@@ -24,14 +24,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll(int categoryId)
+        public IActionResult GetAll([FromQuery] int categoryId)
         {
             IDataResult<List<Product>> result = _productService.GetCategoryProducts(categoryId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("add")]
-        public IActionResult Add(AddProductDto addProduct)
+        public IActionResult Add([FromBody] AddProductDto addProduct)
         {
             Product product = _mapper.Map<AddProductDto, Product>(addProduct);
             IResult result = _productService.Add(product);
@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(UpdateProductDto updateProduct)
+        public IActionResult Update([FromBody] UpdateProductDto updateProduct)
         {
             Product product = _mapper.Map<UpdateProductDto, Product>(updateProduct);
             IResult result = _productService.Update(product);
@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("remove")]
-        public IActionResult Remove(RemoveProductDto removeProduct)
+        public IActionResult Remove([FromBody] RemoveProductDto removeProduct)
         {
             Product product = _mapper.Map<RemoveProductDto, Product>(removeProduct);
             IResult result = _productService.Remove(product);

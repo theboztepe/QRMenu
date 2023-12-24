@@ -25,14 +25,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll(int topCategoryId)
+        public IActionResult GetAll([FromQuery] int topCategoryId)
         {
             IDataResult<List<Category>> result = _categoryService.GetUserCategories(topCategoryId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("add")]
-        public IActionResult Add(AddCategoryDto addCategory)
+        public IActionResult Add([FromBody] AddCategoryDto addCategory)
         {
             Category category = _mapper.Map<AddCategoryDto, Category>(addCategory);
             IResult result = _categoryService.Add(category);
@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(UpdateCategoryDto updateCategory)
+        public IActionResult Update([FromBody] UpdateCategoryDto updateCategory)
         {
             Category category = _mapper.Map<UpdateCategoryDto, Category>(updateCategory);
             IResult result = _categoryService.Update(category);
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("remove")]
-        public IActionResult Remove(RemoveCategoryDto removeCategory)
+        public IActionResult Remove([FromBody] RemoveCategoryDto removeCategory)
         {
             Category category = _mapper.Map<RemoveCategoryDto, Category>(removeCategory);
             IResult result = _categoryService.Remove(category);

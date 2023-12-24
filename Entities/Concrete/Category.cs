@@ -11,6 +11,7 @@ namespace Entities.Concrete
         public int TopCategoryId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string? Image { get; set; }
         [JsonIgnore]
         public int UserId { get; set; }
     }
