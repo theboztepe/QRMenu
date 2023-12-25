@@ -34,9 +34,9 @@ namespace Business.Concrete
 
         #region CRUD
         [CacheAspect]
-        public IDataResult<List<Category>> GetUserCategories(int topCategoryId)
+        public IDataResult<Category> GetUserCategory(int categoryId)
         {
-            return new SuccessDataResult<List<Category>>(_categoryDal.GetUserCategories(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), topCategoryId));
+            return new SuccessDataResult<Category>(_categoryDal.GetUserCategory(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), categoryId));
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
@@ -94,6 +94,12 @@ namespace Business.Concrete
             _categoryDal.Delete(category);
 
             return new SuccessResult(Messages.CategoryRemoved);
+        }
+
+        [CacheAspect]
+        public IDataResult<List<Category>> GetUserCategories(int topCategoryId)
+        {
+            return new SuccessDataResult<List<Category>>(_categoryDal.GetUserCategories(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), topCategoryId));
         }
 
         #region RULES

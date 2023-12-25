@@ -7,5 +7,6 @@ namespace DataAccess.Abstract
     public interface ICategoryDal : IEntityRepository<Category>
     {
         List<Category> GetUserCategories(int userId, int topCategoryId);
+        Category GetUserCategory(int userId, int categoryId);
     }
 }

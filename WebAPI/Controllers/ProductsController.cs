@@ -23,10 +23,10 @@ namespace WebAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] int categoryId)
+        [HttpGet("get")]
+        public IActionResult Get([FromQuery] int productId)
         {
-            IDataResult<List<Product>> result = _productService.GetCategoryProducts(categoryId);
+            IDataResult<Product> result = _productService.GetUserProduct(productId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
@@ -51,6 +51,13 @@ namespace WebAPI.Controllers
         {
             Product product = _mapper.Map<RemoveProductDto, Product>(removeProduct);
             IResult result = _productService.Remove(product);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("getcategoryproducts")]
+        public IActionResult GetCategoryProducts([FromQuery] int categoryId)
+        {
+            IDataResult<List<Product>> result = _productService.GetCategoryProducts(categoryId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }
