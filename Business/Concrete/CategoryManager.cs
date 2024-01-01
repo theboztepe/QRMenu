@@ -55,7 +55,7 @@ namespace Business.Concrete
 
             _categoryDal.Add(category);
 
-            return new SuccessResult(Messages.CategoryAdded);
+            return new SuccessDataResult<Category>(category, Messages.CategoryAdded);
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
@@ -75,7 +75,7 @@ namespace Business.Concrete
 
             _categoryDal.Update(category);
 
-            return new SuccessResult(Messages.CategoryUpdated);
+            return new SuccessDataResult<Category>(category, Messages.CategoryUpdated);
         }
 
         [TransactionScopeAspect]
