@@ -63,7 +63,7 @@ namespace Business.Concrete
 
             _productDal.Add(product);
 
-            return new SuccessResult(Messages.ProductAdded);
+            return new SuccessDataResult<Product>(product, Messages.ProductAdded);
         }
 
         [ValidationAspect(typeof(ProductValidator))]
@@ -88,7 +88,7 @@ namespace Business.Concrete
 
             _productDal.Update(product);
 
-            return new SuccessResult(Messages.ProductUpdated);
+            return new SuccessDataResult<Product>(product, Messages.ProductUpdated);
         }
 
         [TransactionScopeAspect]
