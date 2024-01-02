@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using DataAccess.Helper;
+using Entities.Concrete;
 using FluentValidation;
 
 namespace Business.ValidationRules.FluentValidation
@@ -14,6 +15,21 @@ namespace Business.ValidationRules.FluentValidation
                 .MaximumLength(250).WithMessage("Ürün adı maksimum 250 karakter olmalıdır.");
             RuleFor(p => p.Description)
                 .MaximumLength(250).WithMessage("Ürün açıklaması maksimum 250 karakter olmalıdır.");
+            RuleFor(p => p.Image)
+                .Must(ImageFileTypeControl).WithMessage("Dosya türü desteklenmemektedir.")
+                .Must(ImageFileSizeControl).WithMessage("Yüklenen dosyanın boyutu çok yüksek, maksimum 100kb olmalıdır.");
+        }
+
+        private bool ImageFileTypeControl(string arg)
+        {
+            ImageControl imageControl = new();
+            return string.IsNullOrEmpty(arg) || imageControl.ImageFileTypeControl(arg);
+        }
+
+        private bool ImageFileSizeControl(string arg)
+        {
+            ImageControl imageControl = new();
+            return string.IsNullOrEmpty(arg) || imageControl.ImageFileSizeControl(arg);
         }
     }
 }
