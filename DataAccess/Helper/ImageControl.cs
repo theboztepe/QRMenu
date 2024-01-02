@@ -49,7 +49,7 @@ namespace DataAccess.Helper
             int fileSizeInBytes = imageBytes.Length;
             double fileSizeInKb = fileSizeInBytes / 1024.0;
 
-            return fileSizeInKb <= 100;
+            return fileSizeInKb <= 300;
         }
     }
 }
