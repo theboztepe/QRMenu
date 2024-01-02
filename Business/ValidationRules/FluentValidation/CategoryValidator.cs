@@ -15,7 +15,7 @@ namespace Business.ValidationRules.FluentValidation
                 .MaximumLength(250).WithMessage("Kategori adı maksimum 250 karakter olmalıdır.");
             RuleFor(c => c.Description)
                 .MaximumLength(250).WithMessage("Kategori açıklaması maksimum 250 karakter olmalıdır.");
-            RuleFor(p => p.Image)
+            RuleFor(c => c.Image)
                 .Must(ImageFileTypeControl).WithMessage("Dosya türü desteklenmemektedir.")
                 .Must(ImageFileSizeControl).WithMessage("Yüklenen dosyanın boyutu çok yüksek, maksimum 100kb olmalıdır.");
         }
