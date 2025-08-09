@@ -109,12 +109,7 @@ namespace WebAPI
                 });
             });
 
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperProfile());
-            });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
