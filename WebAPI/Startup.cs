@@ -13,8 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using WebAPI.AutoMapper;
 
@@ -32,6 +33,8 @@ namespace WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(cfg => { }, typeof(AutoMapperProfile).Assembly);
+
             services.AddControllers();
 
             services.AddCors();
@@ -93,23 +96,11 @@ namespace WebAPI
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
+                    { new OpenApiSecuritySchemeReference("Bearer", document), new List<string>() }
                 });
             });
-
-            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
