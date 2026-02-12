@@ -27,7 +27,7 @@
         public static string ProductRemoved = "Ürün silindi.";
         public static string ProductNotFound = "Ürün bulunamadı.";
         public static string ProductNameAlreadyExists = "Bu isimde zaten başka bir ürün var.";
-        public static string ProductNotCreateBaseCategory = "Ana kategoriye ürün işlemi yapılamaz.";
+        public static string ProductNotCreateBaseCategory = "Ana katwegoriye ürün işlemi yapılamaz.";
         #endregion
     }
 }

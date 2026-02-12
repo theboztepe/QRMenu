@@ -41,7 +41,6 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(_productDal.GetUserProduct(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), productId));
         }
 
-        [CacheAspect]
         [ValidationAspect(typeof(ProductValidator))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IProductService.Get")]
@@ -114,6 +113,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ProductRemoved);
         }
 
+        [CacheAspect]
         public IDataResult<List<Product>> GetCategoryProducts(int categoryId)
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetCategoryProducts(Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value), categoryId));
