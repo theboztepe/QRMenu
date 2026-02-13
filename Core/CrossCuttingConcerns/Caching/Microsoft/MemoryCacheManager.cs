@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -50,29 +51,74 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 
         public void RemoveByPattern(string pattern)
         {
-            int userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
-            string[] patternSplit = pattern.Split('.');
-            pattern = $"{patternSplit[0]}.{userId}.{patternSplit[1]}";
-            PropertyInfo cacheEntriesCollectionDefinition = typeof(MemoryCache).GetProperty("EntriesCollection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);//=> in .net 7 always null
-            if (cacheEntriesCollectionDefinition is not null)
+            if (string.IsNullOrWhiteSpace(pattern))
+                return;
+
+            pattern = pattern.Trim();
+
+            const string nsPrefix = "Business.Abstract.";
+            if (!pattern.StartsWith(nsPrefix, StringComparison.OrdinalIgnoreCase))
+                pattern = nsPrefix + pattern;
+
+            if (_memoryCache is not MemoryCache memoryCache)
+                return;
+
+            string[] parts = pattern.Split('.', StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length < 3)
+                return;
+
+            string service = parts[2];
+            string userPartRegex;
+            string methodPrefix = null;
+
+            int currentUserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
+
+            if (parts.Length >= 5 && int.TryParse(parts[3], out int explicitUserId))
             {
-                dynamic cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(_memoryCache);
-                List<ICacheEntry> cacheCollectionValues = new();
-
-                foreach (dynamic cacheItem in cacheEntriesCollection)
-                {
-                    ICacheEntry cacheItemValue = cacheItem.GetType().GetProperty("Value").GetValue(cacheItem, null);
-                    cacheCollectionValues.Add(cacheItemValue);
-                }
-
-                Regex regex = new(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                List<object> keysToRemove = cacheCollectionValues.Where(d => regex.IsMatch(d.Key.ToString())).Select(d => d.Key).ToList();
-
-                foreach (object key in keysToRemove)
-                {
-                    _memoryCache.Remove(key);
-                }
+                userPartRegex = Regex.Escape(explicitUserId.ToString());
+                methodPrefix = parts[4];
             }
+            else if (parts.Length >= 4)
+            {
+                userPartRegex = Regex.Escape(currentUserId.ToString());
+                methodPrefix = parts[3];
+            }
+            else
+            {
+                userPartRegex = Regex.Escape(currentUserId.ToString());
+            }
+
+            string regexPattern =
+                "^" + Regex.Escape("Business.Abstract.") +
+                Regex.Escape(service) +
+                "\\." + userPartRegex + "\\." +
+                (string.IsNullOrEmpty(methodPrefix) ? "" : Regex.Escape(methodPrefix));
+
+            Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            var coherentStateField = typeof(MemoryCache).GetField("_coherentState", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (coherentStateField == null) return;
+
+            var coherentState = coherentStateField.GetValue(memoryCache);
+            if (coherentState == null) return;
+
+            var entriesField = coherentState.GetType().GetField("_stringEntries", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (entriesField == null) return;
+
+            if (entriesField.GetValue(coherentState) is not IDictionary entries)
+                return;
+
+            List<object> keysToRemove = new();
+
+            foreach (DictionaryEntry entry in entries)
+            {
+                if (entry.Key is string key && regex.IsMatch(key))
+                    keysToRemove.Add(entry.Key);
+            }
+
+            foreach (var key in keysToRemove)
+                _memoryCache.Remove(key);
         }
     }
 }
