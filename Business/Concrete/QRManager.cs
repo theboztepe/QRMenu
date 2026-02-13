@@ -13,19 +13,11 @@ using System;
 namespace Business.Concrete
 {
     [SecuredOperation]
-    public class QRManager : IQRService
+    public class QRManager(IQRDal qrDal, IProductDal productDal) : IQRService
     {
-        private readonly IQRDal _qrDal;
-        private readonly IProductDal _productDal;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public QRManager(IQRDal qrDal, IProductDal productDal)
-        {
-            _qrDal = qrDal;
-            _productDal = productDal;
-
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-        }
+        private readonly IQRDal _qrDal = qrDal;
+        private readonly IProductDal _productDal = productDal;
+        private readonly IHttpContextAccessor _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         [CacheAspect]
         public IDataResult<CategoryTree> GetQRMenuCategories()

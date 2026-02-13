@@ -60,12 +60,12 @@ namespace Core.Utilities.Security.JWT
         {
             ClaimsIdentity identity = new(
                  new GenericIdentity(user.Username, "Login"),
-                 new[] {
-                           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                           new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-                           new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                           new Claim(JwtRegisteredClaimNames.AuthTime, NowDate.ToString("yyyy-MM-dd HH:mm:ss")),
-                 }
+                 [
+                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                     new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+                     new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                     new Claim(JwtRegisteredClaimNames.AuthTime, NowDate.ToString("yyyy-MM-dd HH:mm:ss")),
+                 ]
               );
 
             return identity;

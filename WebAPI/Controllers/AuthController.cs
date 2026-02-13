@@ -10,14 +10,9 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : Controller
+    public class AuthController(IAuthService authService) : Controller
     {
-        private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+        private readonly IAuthService _authService = authService;
 
         [HttpPost("login")]
         public ActionResult Login(UserForLoginDto userForLoginDto, [FromServices] SigningConfigurations signingConfigurations, [FromServices] TokenOptions tokenOptions)

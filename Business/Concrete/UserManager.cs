@@ -5,14 +5,9 @@ using Entities.DTOs.QR;
 
 namespace Business.Concrete
 {
-    public class UserManager : IUserService
+    public class UserManager(IUserDal userDal) : IUserService
     {
-        private readonly IUserDal _userDal;
-
-        public UserManager(IUserDal userDal)
-        {
-            _userDal = userDal;
-        }
+        private readonly IUserDal _userDal = userDal;
 
         public void Add(User user)
         {

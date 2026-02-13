@@ -22,7 +22,7 @@ namespace DataAccess.Concrete.EntityFramework
         public CategoryTree GetQRMenuCategories(int userId)
         {
             using QRMenuContext context = new();
-            List<CategoriesTree> categories = (from c in context.Categories
+            List<CategoriesTree> categories = [.. (from c in context.Categories
                                                where c.UserId == userId
                                                select new CategoriesTree
                                                {
@@ -32,7 +32,7 @@ namespace DataAccess.Concrete.EntityFramework
                                                    UserId = c.UserId,
                                                    TopCategoryId = c.TopCategoryId,
                                                    SubCategories = new List<CategoriesTree>(),
-                                               }).ToList();
+                                               })];
 
             CategoryTree result = new(categories);
             return result;
@@ -41,7 +41,7 @@ namespace DataAccess.Concrete.EntityFramework
         public CategoryTree GetQRMenuCategoriesWithProduct(int userId, IProductDal productDal)
         {
             using QRMenuContext context = new();
-            List<CategoriesTree> categories = (from c in context.Categories
+            List<CategoriesTree> categories = [.. (from c in context.Categories
                                                where c.UserId == userId
                                                select new CategoriesTree
                                                {
@@ -52,7 +52,7 @@ namespace DataAccess.Concrete.EntityFramework
                                                    TopCategoryId = c.TopCategoryId,
                                                    SubCategories = new List<CategoriesTree>(),
                                                    Products = new List<Product>()
-                                               }).ToList();
+                                               })];
 
             CategoryTree result = new(categories, productDal);
             return result;
@@ -69,7 +69,7 @@ namespace DataAccess.Concrete.EntityFramework
             IQueryable<Category> result = from c in context.Categories
                                           where c.UserId == userId && c.TopCategoryId == topCategoryId
                                           select c;
-            return result.ToList();
+            return [.. result];
         }
     }
 }

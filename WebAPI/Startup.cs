@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Core.DepencyResolvers;
+﻿using Core.DepencyResolvers;
 using Core.Extensions;
-using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,14 +19,9 @@ using WebAPI.AutoMapper;
 
 namespace WebAPI
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
         public Version version = Assembly.GetExecutingAssembly().GetName().Version;
 
         public void ConfigureServices(IServiceCollection services)
@@ -70,10 +63,10 @@ namespace WebAPI
                     .RequireAuthenticatedUser().Build());
             });
 
-            services.AddDependencyResolvers(new ICoreModule[]
-            {
+            services.AddDependencyResolvers(
+            [
                 new CoreModule(),
-            });
+            ]);
 
             services.AddSwaggerGen(c =>
             {

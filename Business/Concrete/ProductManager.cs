@@ -15,24 +15,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Business.Concrete
 {
     [SecuredOperation]
-    public class ProductManager : IProductService
+    public class ProductManager(IProductDal productDal, ICategoryDal categoryDal) : IProductService
     {
-        private readonly IProductDal _productDal;
-        private readonly ICategoryDal _categoryDal;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public ProductManager(IProductDal productDal, ICategoryDal categoryDal)
-        {
-            _productDal = productDal;
-            _categoryDal = categoryDal;
-
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-        }
+        private readonly IProductDal _productDal = productDal;
+        private readonly ICategoryDal _categoryDal = categoryDal;
+        private readonly IHttpContextAccessor _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         #region CRUD
         [CacheAspect]
@@ -44,6 +35,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IProductService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Add(Product product)
         {
             Category category = new()
@@ -68,6 +60,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("IProductService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Update(Product product)
         {
             Category category = new()
@@ -92,6 +85,7 @@ namespace Business.Concrete
 
         [TransactionScopeAspect]
         [CacheRemoveAspect("IProductService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Remove(Product product)
         {
             Category category = new()
@@ -127,7 +121,7 @@ namespace Business.Concrete
         }
         private IResult CheckIfProductNameExistsAdd(Product product)
         {
-            bool result = _productDal.GetAll(p => p.Name == product.Name && p.CategoryId == product.CategoryId).Any();
+            bool result = _productDal.GetAll(p => p.Name == product.Name && p.CategoryId == product.CategoryId).Count != 0;
             return result ? new ErrorResult(Messages.ProductNameAlreadyExists) : new SuccessResult();
         }
 
@@ -139,7 +133,7 @@ namespace Business.Concrete
 
         private IResult CheckIfProductNameExistsUpdate(Product product)
         {
-            bool result = _productDal.GetAll(p => p.Name == product.Name && p.CategoryId == product.CategoryId && p.Id != product.Id).Any();
+            bool result = _productDal.GetAll(p => p.Name == product.Name && p.CategoryId == product.CategoryId && p.Id != product.Id).Count != 0;
             return result ? new ErrorResult(Messages.ProductNameAlreadyExists) : new SuccessResult();
         }
         #endregion

@@ -15,20 +15,12 @@ using System;
 
 namespace Business.Concrete
 {
-    public class AuthManager : IAuthService
+    public class AuthManager(IUserService userService, ITokenHelper tokenHelper) : IAuthService
     {
-        private readonly IUserService _userService;
-        private readonly ITokenHelper _tokenHelper;
+        private readonly IUserService _userService = userService;
+        private readonly ITokenHelper _tokenHelper = tokenHelper;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
-        {
-            _userService = userService;
-            _tokenHelper = tokenHelper;
-
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-        }
+        private readonly IHttpContextAccessor _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
         {

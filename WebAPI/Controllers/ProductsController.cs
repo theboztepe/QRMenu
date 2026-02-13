@@ -12,16 +12,10 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ProductsController : ControllerBase
+    public class ProductsController(IProductService productService, IMapper mapper) : ControllerBase
     {
-        private readonly IProductService _productService;
-        private readonly IMapper _mapper;
-
-        public ProductsController(IProductService productService, IMapper mapper)
-        {
-            _productService = productService;
-            _mapper = mapper;
-        }
+        private readonly IProductService _productService = productService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet("get")]
         public IActionResult Get([FromQuery] int productId)

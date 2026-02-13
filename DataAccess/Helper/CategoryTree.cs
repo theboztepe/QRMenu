@@ -17,8 +17,8 @@ namespace DataAccess.Helper
         {
             this._productDal = productDal;
             this.categories = categories;
-            Root = categories.Where(c => c.TopCategoryId == 0).ToList();
-            if (!Root.Any())
+            Root = [.. categories.Where(c => c.TopCategoryId == 0)];
+            if (Root.Count == 0)
             {
                 throw new InvalidOperationException("Root category not found.");
             }
