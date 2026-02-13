@@ -25,7 +25,7 @@ namespace DataAccess.Concrete.EntityFramework
                                          join c in context.Categories on p.CategoryId equals c.Id
                                          where c.UserId == userId && p.CategoryId == categoryId
                                          select p;
-            return result.ToList();
+            return [.. result];
         }
     }
 }

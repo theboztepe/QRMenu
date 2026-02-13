@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Core.Utilities.Results;
 using DataAccess.Helper;
 using Entities.DTOs.QR;
@@ -18,19 +17,11 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class QRController : ControllerBase
+    public class QRController(IQRService qrService, IAuthService authService) : ControllerBase
     {
-        private readonly IQRService _qrService;
-        private readonly IAuthService _authService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public QRController(IQRService qrService, IAuthService authService)
-        {
-            _qrService = qrService;
-            _authService = authService;
-
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-        }
+        private readonly IQRService _qrService = qrService;
+        private readonly IAuthService _authService = authService;
+        private readonly IHttpContextAccessor _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         [Authorize]
         [HttpGet("qrmenucode")]
@@ -69,20 +60,17 @@ namespace WebAPI.Controllers
                 return BadRequest(userInfo);
 
             #region create guest claims
-            if (_httpContextAccessor?.HttpContext?.User?.ClaimRoles().Length == 0)
-            {
-                var claims = new List<Claim>
-                            {
-                               new(JwtRegisteredClaimNames.Sub, userInfo.Data.ToString()),
-                               new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                               new(JwtRegisteredClaimNames.UniqueName, "guest_" + Guid.NewGuid().ToString()),
-                               new(JwtRegisteredClaimNames.Sub, userInfo.Data.ToString()),
-                               new(JwtRegisteredClaimNames.AuthTime, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
-                            };
+            var claims = new List<Claim>
+                         {
+                             new(JwtRegisteredClaimNames.Sub, userInfo.Data.ToString()),
+                             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                             new(JwtRegisteredClaimNames.UniqueName, "guest_" + Guid.NewGuid().ToString()),
+                             new(JwtRegisteredClaimNames.Sub, userInfo.Data.ToString()),
+                             new(JwtRegisteredClaimNames.AuthTime, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
+                         };
 
-                var claimsIdentity = new ClaimsIdentity(claims);
-                _httpContextAccessor.HttpContext.User.AddIdentity(claimsIdentity);
-            }
+            var claimsIdentity = new ClaimsIdentity(claims);
+            _httpContextAccessor.HttpContext.User.AddIdentity(claimsIdentity);
             #endregion
 
             IDataResult<CategoryTree> result = _qrService.GetQRMenuWithQRCode((int)userInfo.Data);

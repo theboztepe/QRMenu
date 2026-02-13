@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -95,7 +94,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
                 "\\." + userPartRegex + "\\." +
                 (string.IsNullOrEmpty(methodPrefix) ? "" : Regex.Escape(methodPrefix));
 
-            Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            Regex regex = new(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             var coherentStateField = typeof(MemoryCache).GetField("_coherentState", BindingFlags.NonPublic | BindingFlags.Instance);
             if (coherentStateField == null) return;
@@ -109,7 +108,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
             if (entriesField.GetValue(coherentState) is not IDictionary entries)
                 return;
 
-            List<object> keysToRemove = new();
+            List<object> keysToRemove = [];
 
             foreach (DictionaryEntry entry in entries)
             {

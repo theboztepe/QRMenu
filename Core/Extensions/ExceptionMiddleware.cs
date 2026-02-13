@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Extensions
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-
-        public ExceptionMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+        private readonly RequestDelegate _next = next;
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
@@ -27,7 +22,7 @@ namespace Core.Extensions
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext, Exception e)
+        private static Task HandleExceptionAsync(HttpContext httpContext, Exception e)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

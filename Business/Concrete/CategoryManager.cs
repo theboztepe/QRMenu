@@ -15,22 +15,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Business.Concrete
 {
     [SecuredOperation]
-    public class CategoryManager : ICategoryService
+    public class CategoryManager(ICategoryDal categoryDal) : ICategoryService
     {
-        private readonly ICategoryDal _categoryDal;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public CategoryManager(ICategoryDal categoryDal)
-        {
-            _categoryDal = categoryDal;
-
-            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-        }
+        private readonly ICategoryDal _categoryDal = categoryDal;
+        private readonly IHttpContextAccessor _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         #region CRUD
         [CacheAspect]
@@ -42,6 +34,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CategoryValidator))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICategoryService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Add(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
@@ -61,6 +54,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CategoryValidator))]
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICategoryService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Update(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
@@ -80,6 +74,7 @@ namespace Business.Concrete
 
         [TransactionScopeAspect]
         [CacheRemoveAspect("ICategoryService.Get")]
+        [CacheRemoveAspect("IQRService.Get")]
         public IResult Remove(Category category)
         {
             category.UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.ClaimRoles()[3].Value);
@@ -105,7 +100,7 @@ namespace Business.Concrete
         #region RULES
         private IResult CheckIfCategoryNameExistsAdd(Category category)
         {
-            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId).Any();
+            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId).Count != 0;
             return result ? new ErrorResult(Messages.CategoryNameAlreadyExists) : new SuccessResult();
         }
 
@@ -117,7 +112,7 @@ namespace Business.Concrete
 
         private IResult CheckIfCategoryNameExistsUpdate(Category category)
         {
-            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId && c.Id != category.Id).Any();
+            bool result = _categoryDal.GetAll(c => c.Name == category.Name && c.UserId == category.UserId && c.Id != category.Id).Count != 0;
             return result ? new ErrorResult(Messages.CategoryNameAlreadyExists) : new SuccessResult();
         }
         #endregion

@@ -10,8 +10,8 @@ namespace Core.Utilities.Interceptors
     {
         public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
-            List<MethodInterceptionBaseAttribute> classAttributes = type.GetCustomAttributes<MethodInterceptionBaseAttribute>
-                (true).ToList();
+            List<MethodInterceptionBaseAttribute> classAttributes = [.. type.GetCustomAttributes<MethodInterceptionBaseAttribute>
+                (true)];
             IEnumerable<MethodInterceptionBaseAttribute> methodAttributes = type.GetMethod(method.Name)
                 .GetCustomAttributes<MethodInterceptionBaseAttribute>(true);
             classAttributes.AddRange(methodAttributes);

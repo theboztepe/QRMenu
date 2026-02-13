@@ -12,16 +12,10 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController(ICategoryService categoryService, IMapper mapper) : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
-        private readonly IMapper _mapper;
-
-        public CategoriesController(ICategoryService categoryService, IMapper mapper)
-        {
-            _categoryService = categoryService;
-            _mapper = mapper;
-        }
+        private readonly ICategoryService _categoryService = categoryService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet("get")]
         public IActionResult Get([FromQuery] int categoryId)

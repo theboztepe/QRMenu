@@ -38,8 +38,8 @@ namespace Core.DataAccess.EntityFramework
         {
             using TContext context = new();
             return filter == null
-                ? context.Set<TEntity>().ToList()
-                : context.Set<TEntity>().Where(filter).ToList();
+                ? [.. context.Set<TEntity>()]
+                : [.. context.Set<TEntity>().Where(filter)];
         }
 
         public void Update(TEntity entity)

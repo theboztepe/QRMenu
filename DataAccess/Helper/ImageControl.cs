@@ -23,18 +23,15 @@ namespace DataAccess.Helper
             return false;
         }
 
-        private bool FileExtensionControl(string base64String)
+        private static bool FileExtensionControl(string base64String)
         {
             var data = base64String[..5];
 
-            switch (data.ToUpper())
+            return data.ToUpper() switch
             {
-                case "IVBOR":
-                case "/9J/4":
-                    return true;
-                default:
-                    return false;
-            }
+                "IVBOR" or "/9J/4" => true,
+                _ => false,
+            };
         }
 
         public bool ImageFileSizeControl(string base64String)
