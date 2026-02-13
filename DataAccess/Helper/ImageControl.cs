@@ -16,7 +16,8 @@ namespace DataAccess.Helper
             foreach (string format in imageFormats)
             {
                 string header = $"data:image/{format};base64,";
-                return base64String.StartsWith(header);
+                if (base64String.StartsWith(header))
+                    return true;
             }
 
             return false;
